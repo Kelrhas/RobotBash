@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Robot bash/Robot bash.vcxproj.user
+/Robot bash/Robot bash.vcxproj.fellow.nvuser

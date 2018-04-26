@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ENTITIES">
+      <UniqueIdentifier>{6f02c0e2-79dc-43ab-a843-e9cafd010b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO">
+      <UniqueIdentifier>{84cefcfd-214d-4553-a87f-896a4d7f14af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RENDERER">
+      <UniqueIdentifier>{366536c6-4d7c-4837-9546-b42ad3bb5e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UTILS">
+      <UniqueIdentifier>{5dff3caa-3d40-4ee1-9771-741f924b269c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UTILS\imgui">
+      <UniqueIdentifier>{7768131e-ed5d-4c18-8838-7e9962fe1ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinyxml2">
+      <UniqueIdentifier>{46006359-8d66-4b03-b169-0e86c1d082bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ENTITIES\Entity.cpp">
+      <Filter>ENTITIES</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ENTITIES\EntityComponent.cpp">
+      <Filter>ENTITIES</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ENTITIES\EntityManager.cpp">
+      <Filter>ENTITIES</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IO\BMPLoader.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IO\FileIO.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IO\InputMgr.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IO\OBJLoader.cpp">
+      <Filter>IO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Batch.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Camera.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\DeferredDirectionalLightTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\DeferredGeometryTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\DeferredLightingTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\DirectionalLight.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\ForwardTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\GBuffer.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\GBufferTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\GLRenderer.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\GLShaderProgram.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\GLVAO.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Light.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Mesh.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\PointLight.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\ShadowmapTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Skybox.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\SkyboxTechnique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Technique.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RENDERER\Texture.cpp">
+      <Filter>RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\imgui_impl.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\Math.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\Memory.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\Time.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\Debug.cpp">
+      <Filter>UTILS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\imgui\imgui.cpp">
+      <Filter>UTILS\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\imgui\imgui_demo.cpp">
+      <Filter>UTILS\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTILS\imgui\imgui_draw.cpp">
+      <Filter>UTILS\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\ogl.cpp" />
+    <ClCompile Include="src\StdAfx.cpp" />
+    <ClCompile Include="src\win32main.cpp" />
+    <ClCompile Include="tinyxml\tinyxml2.cpp">
+      <Filter>tinyxml2</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\UTILS\Debug.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\Memory.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\Time.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\GLShaderProgram.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\GLVAO.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\GLRenderer.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Mesh.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Batch.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IO\BMPLoader.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IO\FileIO.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IO\OBJLoader.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ENTITIES\Entity.h">
+      <Filter>ENTITIES</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Light.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ENTITIES\EntityComponent.h">
+      <Filter>ENTITIES</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\GBuffer.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui_impl.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\imgui_internal.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\stb_rect_pack.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\stb_textedit.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\stb_truetype.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\imconfig.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UTILS\imgui\imgui.h">
+      <Filter>UTILS\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IO\InputDefinitions.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IO\InputMgr.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Technique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Camera.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\DeferredGeometryTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\DeferredDirectionalLightTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Texture.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\ForwardTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\DirectionalLight.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\RendererDefinitions.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\GBufferTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\Skybox.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\SkyboxTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\ShadowmapTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ENTITIES\EntityManager.h">
+      <Filter>ENTITIES</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\PointLight.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RENDERER\DeferredLightingTechnique.h">
+      <Filter>RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="src\win32main.h" />
+    <ClInclude Include="src\AssetManager.h" />
+    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Node.h" />
+    <ClInclude Include="src\ogl.h" />
+    <ClInclude Include="src\StdAfx.h" />
+    <ClInclude Include="tinyxml\tinyxml2.h">
+      <Filter>tinyxml2</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

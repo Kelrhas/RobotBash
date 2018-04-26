@@ -1,0 +1,6 @@
+<Entity name="Test scene">
+	<Mesh>
+		<Model>Data/models/test scene.obj</Model>
+		<DiffuseMap>Data/textures/white.bmp</DiffuseMap>
+	</Mesh>
+</Entity>
