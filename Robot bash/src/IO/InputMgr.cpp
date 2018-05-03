@@ -35,6 +35,33 @@ namespace Input
 
 	bool InputMgr::Update(float fDeltaTime)
 	{
+
+		for( int i = 0; i < MAX_INPUT_KEYS; ++i )
+		{
+			if( m_oKeyMap[i].uFlags & KEY_DOWN_FLAG )
+			{
+				m_oKeyMap[i].fTimeDown += fDeltaTime;
+				m_oKeyMap[i].uFlags |= KEY_WASDOWN_FLAG;
+			}
+			else
+			{
+				m_oKeyMap[i].uFlags &= ~KEY_WASDOWN_FLAG;
+			}
+		}
+
+		for( int i = 0; i < 5; ++i )
+		{
+			if( m_oMouseInfos[i].uFlags & KEY_DOWN_FLAG )
+			{
+				m_oMouseInfos[i].fTimeDown += fDeltaTime;
+				m_oMouseInfos[i].uFlags |= KEY_WASDOWN_FLAG;
+			}
+			else
+			{
+				m_oMouseInfos[i].uFlags &= ~KEY_WASDOWN_FLAG;
+			}
+		}
+
 		bool bResult = false;
 		MSG message;
 		while (PeekMessage(&message, m_pWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE))
@@ -110,13 +137,13 @@ namespace Input
 			case WM_MOUSEMOVE:
 			{
 				glm::vec2 vMousePos( GET_X_LPARAM( message.lParam ), GET_Y_LPARAM( message.lParam ) );
-				vMousePos.x /= WINDOW_WIDTH;
-				vMousePos.y /= WINDOW_HEIGHT;
 				if( glm::any( glm::isnan( m_vMousePos ) ) )
 					m_vMousePos = vMousePos;
 				else
 				{
 					glm::vec2 vDelta = vMousePos - m_vMousePos;
+					vDelta.x /= WINDOW_WIDTH;
+					vDelta.y /= WINDOW_HEIGHT;
 					for( Vec2FuncVec::const_iterator it( m_oEventMouseMove.begin() ); it != m_oEventMouseMove.end(); ++it )
 						(*it)(vDelta);
 					m_vMousePos = vMousePos;
@@ -181,18 +208,6 @@ namespace Input
 			}
 		}
 		
-		for (int i = 0; i < MAX_INPUT_KEYS; ++i)
-		{
-			if (m_oKeyMap[i].uFlags & KEY_DOWN_FLAG)
-				m_oKeyMap[i].fTimeDown += fDeltaTime;
-		}
-
-		for (int i = 0; i < 5; ++i)
-		{
-			if (m_oMouseInfos[i].uFlags & KEY_DOWN_FLAG)
-				m_oMouseInfos[i].fTimeDown += fDeltaTime;
-		}
-
 		return bResult;
 ;
 	}
@@ -264,11 +279,6 @@ namespace Input
 
 	glm::vec2 InputMgr::GetCursorPos()
 	{
-		POINT p;
-		::GetCursorPos(&p);
-		if (ScreenToClient(s_pInstance->m_pWindow, &p))
-			return glm::vec2(p.x, p.y);
-
-		return glm::vec2(-1, -1);
+		return s_pInstance->m_vMousePos;
 	}
 }

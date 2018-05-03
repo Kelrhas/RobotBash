@@ -75,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Prog\Visual Projects\Robot bash\Robot bash\src;D:\Prog\Visual Projects\Robot bash\Robot bash\src\UTILS\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\;$(ProjectDir)src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Prog\Visual Projects\Robot bash\Robot bash\src;D:\Prog\Visual Projects\Robot bash\Robot bash\src\UTILS\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)externals\;$(ProjectDir)src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -105,7 +105,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,6 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\externals\imgui\imgui.cpp" />
+    <ClCompile Include="..\externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\externals\tinyxml\tinyxml2.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\ENTITIES\EntityComponent.cpp" />
     <ClCompile Include="src\ENTITIES\Entity.cpp" />
@@ -163,7 +166,6 @@
     <ClCompile Include="src\IO\OBJLoader.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\ogl.cpp" />
-    <ClCompile Include="src\RENDERER\Batch.cpp" />
     <ClCompile Include="src\RENDERER\Camera.cpp" />
     <ClCompile Include="src\RENDERER\DeferredDirectionalLightTechnique.cpp" />
     <ClCompile Include="src\RENDERER\DeferredGeometryTechnique.cpp" />
@@ -185,17 +187,20 @@
     <ClCompile Include="src\RENDERER\Texture.cpp" />
     <ClCompile Include="src\StdAfx.cpp" />
     <ClCompile Include="src\UTILS\Debug.cpp" />
-    <ClCompile Include="src\UTILS\imgui\imgui.cpp" />
-    <ClCompile Include="src\UTILS\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\UTILS\imgui\imgui_draw.cpp" />
     <ClCompile Include="src\UTILS\imgui_impl.cpp" />
     <ClCompile Include="src\UTILS\Math.cpp" />
     <ClCompile Include="src\UTILS\Memory.cpp" />
     <ClCompile Include="src\UTILS\Time.cpp" />
     <ClCompile Include="src\win32main.cpp" />
-    <ClCompile Include="tinyxml\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\externals\imgui\imconfig.h" />
+    <ClInclude Include="..\externals\imgui\imgui.h" />
+    <ClInclude Include="..\externals\imgui\imgui_internal.h" />
+    <ClInclude Include="..\externals\imgui\stb_rect_pack.h" />
+    <ClInclude Include="..\externals\imgui\stb_textedit.h" />
+    <ClInclude Include="..\externals\imgui\stb_truetype.h" />
+    <ClInclude Include="..\externals\tinyxml\tinyxml2.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\ENTITIES\EntityComponent.h" />
@@ -209,7 +214,6 @@
     <ClInclude Include="src\IO\OBJLoader.h" />
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\ogl.h" />
-    <ClInclude Include="src\RENDERER\Batch.h" />
     <ClInclude Include="src\RENDERER\Camera.h" />
     <ClInclude Include="src\RENDERER\DeferredDirectionalLightTechnique.h" />
     <ClInclude Include="src\RENDERER\DeferredGeometryTechnique.h" />
@@ -232,17 +236,11 @@
     <ClInclude Include="src\RENDERER\Texture.h" />
     <ClInclude Include="src\StdAfx.h" />
     <ClInclude Include="src\UTILS\Debug.h" />
-    <ClInclude Include="src\UTILS\imgui\imconfig.h" />
-    <ClInclude Include="src\UTILS\imgui\imgui.h" />
-    <ClInclude Include="src\UTILS\imgui\imgui_internal.h" />
-    <ClInclude Include="src\UTILS\imgui\stb_rect_pack.h" />
-    <ClInclude Include="src\UTILS\imgui\stb_textedit.h" />
-    <ClInclude Include="src\UTILS\imgui\stb_truetype.h" />
     <ClInclude Include="src\UTILS\imgui_impl.h" />
+    <ClInclude Include="src\UTILS\Math.h" />
     <ClInclude Include="src\UTILS\Memory.h" />
     <ClInclude Include="src\UTILS\Time.h" />
     <ClInclude Include="src\win32main.h" />
-    <ClInclude Include="tinyxml\tinyxml2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

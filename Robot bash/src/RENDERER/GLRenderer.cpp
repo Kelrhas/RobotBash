@@ -15,6 +15,8 @@
 #include "Camera.h"
 #include "DirectionalLight.h"
 
+#include "IO/OBJLoader.h"
+
 Renderer::GLRenderer* g_pRenderer = nullptr;
 
 
@@ -50,6 +52,7 @@ namespace Renderer
 
 		glEnable( GL_CULL_FACE );
 		glCullFace( GL_BACK );
+		Assert_GL();
 
 		Assert_return_result( m_oGBuffer.Init( uWindowWidth, uWindowHeight ) );
 
@@ -61,10 +64,31 @@ namespace Renderer
 
 		m_oSkybox.Load("Data/textures/cubemap/hills/");
 
-		MeshInitData data;
-		data.bForward = false;
-		data.sFileName = "Data/models/cube.obj";
-		m_oCubeMesh.InitWithData( &data );
+		//MeshInitData data;
+		//data.bForward = false;
+		//data.sFileName = "Data/models/cube.obj";
+		//m_oCubeMesh.InitWithData( &data );
+
+		{
+			std::vector<glm::vec3> vOutPositions;
+			std::vector<glm::vec3> vOutNormals;
+			std::vector<glm::vec2> vOutUVs;
+			std::vector<uint32_t> vOutIndices;
+		
+			OBJLoader modelLoader;
+			modelLoader.Load( "Data/models/cube.obj" );
+			modelLoader.OptimizeToVAO( vOutPositions, vOutNormals, vOutUVs, vOutIndices );
+			Assert_GL();
+		
+			// TODO get location from technique instead of Renderer::VAO_BUFFER_INDEX
+			m_debugVAO[DEBUG_SHAPE_CUBE].SetData( Renderer::VBO_BUFFER_INDEX, &vOutIndices[0], (int) vOutIndices.size() );
+			Assert_GL();
+			m_debugVAO[DEBUG_SHAPE_CUBE].SetData( Renderer::VBO_BUFFER_POSITION, &vOutPositions[0], (int) vOutPositions.size() );
+			Assert_GL();
+			m_debugVAO[DEBUG_SHAPE_CUBE].SetData( Renderer::VBO_BUFFER_UV, &vOutUVs[0], (int) vOutUVs.size() );
+		}
+		Assert_GL();
+
 
 		///////////////////////////////////////
 		// SHADOW MAP
@@ -76,13 +100,13 @@ namespace Renderer
 		glGenTextures( 1, &m_uShadowmapTexID );
 		glBindTexture( GL_TEXTURE_2D, m_uShadowmapTexID );
 		Assert_GL();
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, uWindowWidth, uWindowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 2048, 2048, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr );
 		Assert_GL();
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE );
+		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE );²
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL );
 		Assert_GL();
 
@@ -110,6 +134,7 @@ namespace Renderer
 
 	void GLRenderer::Resize( uint32_t uWindowWidth, uint32_t uWindowHeight )
 	{
+		// TODO resize RT
 		glViewport( 0, 0, uWindowWidth, uWindowHeight );
 		m_uWindowWidth = uWindowWidth;
 		m_uWindowHeight = uWindowHeight;
@@ -224,9 +249,11 @@ namespace Renderer
 				if( ImGui::Begin( "Debug" ) )
 				{
 					DEBUG::ShowMenu();
-					g_pEntityMgr->ImGuiDraw();
+					m_pCamera->ImGuiDraw();
 				}
 				ImGui::End();
+
+				g_pEntityMgr->ImGuiDraw();
 			}
 
 			ImGui::Render();
@@ -238,6 +265,18 @@ namespace Renderer
 		return true;
 	}
 
+	uint32_t GLRenderer::GetPickingId( uint32_t x, uint32_t y ) const
+	{
+		glReadBuffer( aRenderTargetInfos[renderTarget_Picking].eAttachment );
+
+		float Pixel;
+		glReadPixels( x, m_uWindowHeight - y, 1, 1, aRenderTargetInfos[renderTarget_Picking].uFormat, aRenderTargetInfos[renderTarget_Picking].uType, &Pixel );
+
+		glReadBuffer( GL_NONE );
+
+		return (uint32_t) Pixel-1;
+	}
+
 	bool GLRenderer::ShadowMap()
 	{
 		CREATE_DEBUG_GROUP( "shadow map" );
@@ -245,6 +284,9 @@ namespace Renderer
 #ifdef _DEBUG
 		m_oShadowmapTechnique.LiveUpdate();
 #endif
+
+
+		glViewport( 0, 0, 2048, 2048 );
 
 		glBindFramebuffer( GL_FRAMEBUFFER, m_uShadowmapFBOId );
 		glClear( GL_DEPTH_BUFFER_BIT );
@@ -262,7 +304,7 @@ namespace Renderer
 			 itBatch != m_oOpaqueDeferredBatches.end();
 			 ++itBatch )
 		{
-			const glm::mat4& mModel = *itBatch->pWorldMatrix;
+			const glm::mat4& mModel = itBatch->mWorldMatrix;
 			const glm::mat4 mMV = mView * mModel;
 			const glm::mat4 mMVP = mProj * mMV;
 			//glm::mat4 mNormalMtx = glm::inverse( mMV );
@@ -277,6 +319,9 @@ namespace Renderer
 			glDrawElements( GL_TRIANGLES, (GLsizei) itBatch->uNbVertex, GL_UNSIGNED_INT, 0 );
 			Assert_GL();
 		}
+
+
+		glViewport( 0, 0, m_uWindowWidth, m_uWindowHeight );
 
 		return true;
 	}
@@ -305,8 +350,9 @@ namespace Renderer
 			aRenderTargetInfos[renderTarget_WorldPos].eAttachment,
 			aRenderTargetInfos[renderTarget_Albedo].eAttachment,
 			aRenderTargetInfos[renderTarget_Normal].eAttachment,
-			aRenderTargetInfos[renderTarget_TexCoord].eAttachment };
-		glDrawBuffers( 4, aDrawBuffers );
+			aRenderTargetInfos[renderTarget_TexCoord].eAttachment,
+			aRenderTargetInfos[renderTarget_Picking].eAttachment };
+		glDrawBuffers( 5, aDrawBuffers );
 		Assert_GL();
 
 		glEnable( GL_DEPTH_TEST );
@@ -328,7 +374,7 @@ namespace Renderer
 			 itBatch != m_oOpaqueDeferredBatches.end();
 			 ++itBatch )
 		{
-			const glm::mat4& mModel = *itBatch->pWorldMatrix;
+			const glm::mat4& mModel = itBatch->mWorldMatrix;
 			const glm::mat4 mMV = mView * mModel;
 			const glm::mat4 mMVP = mProj * mMV;
 			glm::mat4 mNormalMtx = glm::inverse( mMV );
@@ -340,6 +386,7 @@ namespace Renderer
 			m_oDeferredGeometry.SetModelMatrix( mModel );
 			m_oDeferredGeometry.SetMVP( mMVP );
 			m_oDeferredGeometry.SetNormalMatrix( mNormalMtx );
+			m_oDeferredGeometry.SetObjectId( itBatch->uObjectId );
 
 			int iCurrentTexture = 0;
 			if( !itBatch->xDiffuseMap.expired() )
@@ -408,21 +455,31 @@ namespace Renderer
 		m_oGBuffer.BindForWriting();
 		Assert_GL();
 
+		// rendering into final RT
 		glDrawBuffer( aRenderTargetInfos[renderTarget_FinalLit].eAttachment );
 		Assert_GL();
 
 		glClear( GL_COLOR_BUFFER_BIT );
 
-		m_oGBuffer.BindTextures();
+		
+		//glEnable( GL_BLEND ); // enabling blend between different lights
+		glDisable( GL_DEPTH_TEST ); // disabling  depth test to render light "geometry"
+
+		m_oGBuffer.BindTextures(); // using the geometry pass RT
 
 		glActiveTexture( GL_TEXTURE5 );
 		glBindTexture( GL_TEXTURE_2D, m_uShadowmapTexID );
 
-		const glm::mat4& mLightView = m_pSunLight->GetViewMatrix();
-		const glm::mat4& mLightProj = m_pSunLight->GetProjMatrix();
-
 		glm::mat4 mCameraView = m_pCamera->GetViewMatrix();
 		const glm::mat4& mCameraProj = m_pCamera->GetProjectionMatrix();
+
+
+		///////////////////////////////////////////
+		/// STARTING WITH THE DIRECTIONAL LIGHT ///
+		///////////////////////////////////////////
+
+		const glm::mat4& mLightView = m_pSunLight->GetViewMatrix();
+		const glm::mat4& mLightProj = m_pSunLight->GetProjMatrix();
 
 		m_oDeferredLightingTech.Use();
 		m_oDeferredLightingTech.BindLocations();
@@ -433,23 +490,22 @@ namespace Renderer
 		m_oDeferredLightingTech.SetLightProjMatrix( mLightProj );
 		m_oDeferredLightingTech.SetEyeWorldPos( m_pCamera->GetPosition() );
 
-		// dir light
 		m_oDeferredLightingTech.SetSunData( static_cast<DirectionalLight::DirectionalLightData*>( m_pSunLight->GetGLSLData() ) );
+
+		m_pSunLight->Render();
 
 		// TODO separate light passes to only render the fragment "visible" by the light and apply different shadows
 
+
 		// point lights
-		m_oDeferredLightingTech.SetNbPointLight( m_oPointLights.size() );
-		for( int i=0; i < m_oPointLights.size(); ++i )
-		{
-			const PointLight* pPointLight = m_oPointLights[i];
-
-			m_oDeferredLightingTech.SetPointLightData( i, static_cast<PointLight::PointLightData*>(pPointLight->GetGLSLData() ) );
-		}
-
-		m_oGBuffer.DrawQuad();
-
-		glDisable( GL_DEPTH_TEST );
+		//m_oDeferredLightingTech.SetNbPointLight( m_oPointLights.size() );
+		//for( int i = 0; i < m_oPointLights.size(); ++i )
+		//{
+		//	const PointLight* pPointLight = m_oPointLights[i];
+		//
+		//	m_oDeferredLightingTech.SetPointLightData( i, static_cast<PointLight::PointLightData*>(pPointLight->GetGLSLData()) );
+		//	pPointLight->Render();
+		//}
 
 		return true;
 	}
@@ -477,7 +533,7 @@ namespace Renderer
 			 itBatch != m_oOpaqueForwardBatches.end();
 			 ++itBatch )
 		{
-			glm::mat4& mModel = *itBatch->pWorldMatrix;
+			const glm::mat4& mModel = itBatch->mWorldMatrix;
 			const glm::mat4& mView = m_pCamera->GetViewMatrix();
 			const glm::mat4& mProj = m_pCamera->GetProjectionMatrix();
 			glm::mat4 mMVP = mProj * mView * mModel;

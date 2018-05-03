@@ -8,8 +8,10 @@ out vec3 TexCoordOut;
 out vec3 WorldPosOut;
 out vec3 AlbedoOut;
 out vec3 NormalOut;
+out float ObjectIdOut;
 
 uniform sampler2D uDiffuseMap;
+uniform uint uObjectId;
 
 void main()
 {
@@ -17,4 +19,6 @@ void main()
 	AlbedoOut 		= texture(uDiffuseMap, ex_UV).rgb;
 	NormalOut 		= normalize(ex_Normal);
 	TexCoordOut 	= vec3(ex_UV, 0);
+	float fObjectId = uObjectId;
+	ObjectIdOut		= uObjectId;
 } 

@@ -42,16 +42,23 @@ namespace Renderer
 	{
 		GLuint				uVAO;
 		size_t				uNbVertex;
-		glm::mat4*			pWorldMatrix;
+		glm::mat4			mWorldMatrix; // by copy instead of pointer to avoid cache miss ? 64o / 8o
 		uint8_t				uFlags;
 		TextureWeakPtr		xDiffuseMap;
+		uint32_t			uObjectId;
+
+#ifdef _DEBUG
+		GLVAO*				pVAO;
+#endif
 
 		RenderBatch()
 			: uVAO(-1)
 			, uNbVertex(0)
-			, pWorldMatrix(nullptr)
 			, uFlags(0)
-		{}
+			, uObjectId(-1)
+		{
+			mWorldMatrix = glm::one<glm::mat4>(); // identity
+		}
 	};
 
 
@@ -80,6 +87,7 @@ namespace Renderer
 		void						AddLight(Light* pLight);
 
 		bool						Render();
+		uint32_t					GetPickingId( uint32_t x, uint32_t y ) const;
 
 		Camera*						GetCamera() const { return m_pCamera; }
 
@@ -118,10 +126,30 @@ namespace Renderer
 		ForwardTechnique			m_oForwardTechnique;
 		GBufferTechnique			m_oGBufferTechnique;
 		ShadowmapTechnique			m_oShadowmapTechnique;
-		Mesh						m_oCubeMesh;
 		Skybox						m_oSkybox;
 		GLuint						m_uShadowmapFBOId;
 		GLuint						m_uShadowmapTexID;
+		Mesh m_oCubeMesh;
+
+
+		enum DebugShape
+		{
+			DEBUG_SHAPE_CUBE,
+			DEBUG_SHAPE_COUNT
+		};
+		GLVAO						m_debugVAO[DEBUG_SHAPE_COUNT];
+
+	public:
+
+		void DEBUG_DRAW_CUBE( glm::vec3 vPos )
+		{
+			RenderBatch batch;
+			batch.mWorldMatrix = glm::lookAt( vPos, vPos + VEC3_FORWARD, VEC3_UP );
+			batch.uNbVertex = 12;
+			batch.uObjectId = 0;
+			batch.uVAO = m_debugVAO[DEBUG_SHAPE_CUBE].GetID();
+			AddBatch( batch );
+		}
 	};
 
 }

@@ -9,7 +9,7 @@ namespace Renderer
 	public:
 		struct PointLightData : public LightData
 		{
-			PointLightData() : LightData(), m_vPosition( VECTOR_0 ), m_fConstantAttenuation( 0.f ), m_fLinearAttenuation( 0.f ), m_fExpAttenuation( 0.f ) {}
+			PointLightData() : LightData(), m_vPosition( VEC3_0 ), m_fConstantAttenuation( 0.f ), m_fLinearAttenuation( 0.f ), m_fExpAttenuation( 0.f ) {}
 
 			glm::vec3		m_vPosition;
 			float			m_fConstantAttenuation;

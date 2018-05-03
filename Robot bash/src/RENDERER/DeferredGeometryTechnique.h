@@ -11,11 +11,12 @@ namespace Renderer
 		virtual void		BindLocations() override;
 		virtual	void		GatherLocations();
 
-				void		SetModelMatrix(const glm::mat4& mMVP);
-				void		SetMVP(const glm::mat4& mMVP);
-				void		SetNormalMatrix(const glm::mat4& mNormalMtx);
-				void		SetDiffuseMap(int iTexIndex);
-				void		SetNormalMap(int iTexIndex);
+				void		SetModelMatrix( const glm::mat4& mMVP );
+				void		SetMVP( const glm::mat4& mMVP );
+				void		SetNormalMatrix( const glm::mat4& mNormalMtx );
+				void		SetDiffuseMap( int iTexIndex );
+				void		SetNormalMap( int iTexIndex );
+				void		SetObjectId( uint32_t uId );
 
 	protected:
 		// ins
@@ -30,5 +31,7 @@ namespace Renderer
 
 		GLint	m_iDiffuseMapLocation;			// tex2d
 		GLint	m_iNormalMapLocation;			// tex2d
+
+		GLint	m_iObjectIdLocation;			// uint
 	};
 }

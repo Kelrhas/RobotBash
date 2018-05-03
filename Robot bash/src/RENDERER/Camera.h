@@ -2,6 +2,8 @@
 
 namespace Renderer
 {
+	class Mesh;
+
 	class Camera
 	{
 		enum CameraMoveMode
@@ -16,9 +18,12 @@ namespace Renderer
 
 		virtual bool				Init();
 		virtual bool				Update( float fDeltatime );
+		virtual void				ImGuiDraw();
 
 				void				SetPerspective( float fFOV, float fNearPlane, float fFarPlane );
 				void				SetOrthogonal( float fWidth, float fHeight, float fNearPlane, float fFarPlane );
+				void				UpdateProjectionMatrix();
+				void				UpdateViewMatrix();
 
 				void				SetActive();
 				void				SetPosition( glm::vec3 vPos );
@@ -51,6 +56,7 @@ namespace Renderer
 		float						m_fOrthoFarPlane;
 		float						m_fOrthoWidth;
 		float						m_fOrthoHeight;
-		glm::vec2					m_vMousePos;
+		glm::vec3					m_vOrbitCenter;
+		float						m_fOrbitDistance;
 	};
 }

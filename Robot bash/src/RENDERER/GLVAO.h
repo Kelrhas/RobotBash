@@ -5,49 +5,32 @@
 
 namespace Renderer
 {
-	enum VAOBuffferFlag
+	enum VAOBufffer
 	{
-		VAO_BUFFER_INDEX = 0x1,
-		VAO_BUFFER_POSITION = 0x2,
-		VAO_BUFFER_NORMAL = 0x4,
-		VAO_BUFFER_UV = 0x8,
-		VAO_BUFFER_COLOR = 0x10,
+		VBO_BUFFER_INDEX,
+		VBO_BUFFER_POSITION,
+		VBO_BUFFER_NORMAL,
+		VBO_BUFFER_UV,
+		VBO_BUFFER_COLOR,
+
+		VBO_BUFFER_COUNT
 	};
 
 	class GLVAO
 	{
-		class GLVBO
-		{
-		public:
-			GLVBO();
-			~GLVBO();
-
-			bool SetData(void* pData, int iNbItem, size_t iItemSize);
-
-			GLuint GetID() const { return m_uID; }
-
-		private:
-			GLuint m_uID;
-		};
-
 	public:
-
-
-		GLVAO(int eBufferFlags = VAO_BUFFER_POSITION);
+		GLVAO();
 		~GLVAO();
 
-		bool SetData(VAOBuffferFlag eFlag, void* pData, int iNbItem);
+		bool SetData( VAOBufffer eFlag, void* pData, int iNbItem);
 		void Bind();
 
 		GLuint GetID() const { return m_uID; }
+
 	private:
 		GLuint		m_uID;
-		GLuint		m_uIndexVBOID;
 		int			m_iBufferFlags;
-		GLVBO*		m_pPositionVBO;
-		GLVBO*		m_pNormalVBO;
-		GLVBO*		m_pTexCoordVBO;
-		GLVBO*		m_pColorVBO;
+		GLuint		m_pVBOArray[VBO_BUFFER_COUNT];
 	};
 }
 

@@ -1,68 +1,22 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <windows.h>
+#define M_E        2.71828182845904523536   // e
+#define M_LOG2E    1.44269504088896340736   // log2(e)
+#define M_LOG10E   0.434294481903251827651  // log10(e)
+#define M_LN2      0.693147180559945309417  // ln(2)
+#define M_LN10     2.30258509299404568402   // ln(10)
+#define M_PI       3.14159265358979323846   // pi
+#define M_PI_2     1.57079632679489661923   // pi/2
+#define M_PI_4     0.785398163397448309616  // pi/4
+#define M_1_PI     0.318309886183790671538  // 1/pi
+#define M_2_PI     0.636619772367581343076  // 2/pi
+#define M_2_SQRTPI 1.12837916709551257390   // 2/sqrt(pi)
+#define M_SQRT2    1.41421356237309504880   // sqrt(2)
+#define M_SQRT1_2  0.707106781186547524401  // 1/sqrt(2
 
-struct Dimension
-{
-	float width = 0;
-	float height = 0;
-	Dimension(){}
-	Dimension(float w, float h) : width(w), height(h){}
-};
-
-class Vector2
-{
-public:
-	float x = 0;
-	float y = 0;
-	Vector2(){}
-	Vector2(float x, float y) : x(x), y(y){}
-	Vector2(const Vector2 &v);
-	void Normalize();
-	float Magnitude();
-	float SquaredMagnitude();
-	Vector2& operator=(const Vector2& v2);
-	Vector2& operator+=(const Vector2& v2);
-	Vector2 operator+(const Vector2& v2);
-	Vector2& operator-=(const Vector2& v2);
-	Vector2 operator-(const Vector2& v2);
-	Vector2 operator-();
-	Vector2& operator*=(float f);
-	Vector2 operator*(float f);
-	friend Vector2 operator*(float f, const Vector2& v);
-	float Dot(const Vector2& v2);
-	float Angle(Vector2& v2);
-	Vector2 Reflect(Vector2 normal);
-	void DEBUGPrint();
-};
-
-
-class Vector3
-{
-public:
-	union
-	{
-		struct
-		{
-			float x, y, z;
-		};
-		float arr[3];
-	};
-	Vector3(float x=0, float y=0, float z=0) : x(x), y(y), z(z){}
-	void Normalize();
-	float Magnitude();
-	float SquaredMagnitude();
-	//Vector3& operator+=(const Vector3& v2);
-	//Vector3 operator+(const Vector3& v2);
-	//Vector3& operator*=(float f);
-	void DEBUGPrint();
-};
-
-
+#define DEG_TO_RAD(deg) (deg * M_PI / 180.0)
+#define RAD_TO_DEG(rad) (rad * 180.0 / M_PI)
 
 namespace Math
 {
@@ -77,23 +31,6 @@ namespace Math
 	inline static int Ceil(float _value) { return (int)ceilf(_value); }
 	inline static int SignOf(float val) { return val > 0 ? 1 : -1; }
 	float RoundToN(float val, int n);
-	float DistancePointToLine(Vector2 point, Vector2 lineStart, Vector2 lineEnd);
-
-	// name already taken by windows.h
-	class Rectangle
-	{
-	public:
-		float x = 0;
-		float y = 0;
-		float width = 0;
-		float height = 0;
-		Rectangle(){}
-		Rectangle(float x, float y, float width, float height) : x(x), y(y), width(width), height(height){}
-		bool Overlaps(const Rectangle& other);
-		Vector2 ClosestPointInside(Vector2 v);
-		Vector2 GetPosition();
-	};
-
 };
 
 //}; // namespace

@@ -15,7 +15,8 @@ namespace DEBUG
 	extern bool bShowDebugMenu;
 	extern bool bShowGBuffer;
 	extern float fTimeFactor;
-	extern float fCameraSpeed;
+	extern float fCameraMoveSpeed;
+	extern float fCameraZoomSpeed;
 	extern Renderer::RenderTarget eTargetToDisplay;
 
 	void Init();

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "win32main.h"
 #include <ctime>
-#include <imgui.h>
+#include "imgui/imgui.h"
 
 #include "ogl.h"
 
@@ -102,6 +102,7 @@ void InitGLAPI()
 	glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC) wglGetProcAddress( "glGetShaderInfoLog" );
 	glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) wglGetProcAddress( "glGetUniformLocation" );
 	glUniform1i = (PFNGLUNIFORM1IPROC) wglGetProcAddress( "glUniform1i" );
+	glUniform1ui = (PFNGLUNIFORM1UIPROC) wglGetProcAddress( "glUniform1ui" );
 	glUniform1iv = (PFNGLUNIFORM1IVPROC) wglGetProcAddress( "glUniform1iv" );
 	glUniform2iv = (PFNGLUNIFORM2IVPROC) wglGetProcAddress( "glUniform2iv" );
 	glUniform3iv = (PFNGLUNIFORM3IVPROC) wglGetProcAddress( "glUniform3iv" );

@@ -3,7 +3,7 @@
 
 #include <cstdarg>
 
-#include "imgui.h"
+#include "imgui/imgui.h"
 #include "IO/InputMgr.h"
 
 namespace DEBUG
@@ -11,7 +11,8 @@ namespace DEBUG
 	bool bShowDebugMenu = false;
 	bool bShowGBuffer = false;
 	float fTimeFactor = 1.f;
-	float fCameraSpeed = 1.f;
+	float fCameraMoveSpeed = 5.f;
+	float fCameraZoomSpeed = 1.f;
 	Renderer::RenderTarget eTargetToDisplay = Renderer::renderTarget_Count;
 	const char** aRenderTargetNames;
 
@@ -50,7 +51,8 @@ namespace DEBUG
 		}
 
 		ImGui::DragFloat( "Time factor", &fTimeFactor, 0.01f, 0.f, 10.f );
-		ImGui::DragFloat( "Camera speed", &fCameraSpeed, 0.01f, 0.01f, 100.f );
+		ImGui::DragFloat( "Camera move speed", &fCameraMoveSpeed, 0.01f, 0.01f, 100.f );
+		ImGui::DragFloat( "Camera zoom speed", &fCameraZoomSpeed, 0.01f, 0.01f, 100.f );
 
 		char buffer[256] = { 0 };
 

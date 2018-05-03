@@ -11,6 +11,8 @@
 #include "RENDERER/Mesh.h"
 #include "RENDERER/GLRenderer.h"
 
+#include "IO\InputMgr.h"
+
 Game::Game(){}
 
 Game::~Game(){}
@@ -77,9 +79,9 @@ bool Game::Init()
 				ss.ignore();
 				ss >> vAxis.z;
 				ss.ignore();
-				ss >> fAngle;
+				ss >> fAngle; // degrees
 
-				pEntity->GetNode()->WorldRotate( fAngle, vAxis );
+				pEntity->GetNode()->WorldRotate( DEG_TO_RAD(fAngle), vAxis );
 			}
 
 			if( tinyxml2::XMLElement* pScale = pRoot->FirstChildElement( "Scale" ) )
@@ -135,7 +137,7 @@ bool Game::Init()
 	m_pDodecahedron->GetNode()->WorldScale( 0.2f );
 	Renderer::PointLight* pLight = m_pDodecahedron->AddComponent<Renderer::PointLight>();
 	pLight->SetIntensity( 1.f );
-	pLight->SetColor( glm::vec3( 1.f, 0.74f, 0.f ) );
+	pLight->SetColor( glm::vec3( 1.f, 1.f, 1.f ) );
 	pLight->SetConstantAttenuation( 0.16f );
 	pLight->SetLinearAttenuation( 0.09f );
 	pLight->SetExpAttenuation( 0.03f );
@@ -145,7 +147,7 @@ bool Game::Init()
 	Entities::Entity* pSun = new Entities::Entity("Sun");
 	Renderer::DirectionalLight* pSunLight = pSun->AddComponent<Renderer::DirectionalLight>();
 	pSunLight->SetIntensity( 1.f );
-	pSunLight->SetColor( glm::vec3( 0.83f, 0.83f, 0.55f ) );
+	pSunLight->SetColor( glm::vec3( 1.f, 1.f, 1.f ) );
 	pSunLight->SetDirection( glm::normalize( glm::vec3( -0.9f, -0.308f, -0.308f ) ) );
 	g_pRenderer->AddLight( pSunLight );
 	g_pEntityMgr->AddEntity( pSun );
@@ -170,8 +172,17 @@ bool Game::Init()
 
 bool Game::Update( float fDeltaTime )
 {
-	m_pSuzanne->GetNode()->WorldRotate( glm::pi<float>() * fDeltaTime * 0.25f, VEC3_UP );
-	m_pDodecahedron->GetNode()->WorldRotate( glm::pi<float>() * fDeltaTime * 0.25f, VEC3_UP );
+	//m_pSuzanne->GetNode()->WorldRotate( glm::pi<float>() * fDeltaTime * 0.25f, VEC3_UP );
+	//m_pDodecahedron->GetNode()->WorldRotate( glm::pi<float>() * fDeltaTime * 0.25f, VEC3_UP );
+
+	//if( Input::InputMgr::IsMouseLeftDown() )
+	//{
+	//	glm::vec2 pos = Input::InputMgr::GetCursorPos();
+	//	uint32_t id = g_pRenderer->GetPickingId( (uint32_t)pos.x, (uint32_t) pos.y );
+	//	Entity* pEntity = g_pEntityMgr->GetEntityByID( id );
+	//	if( pEntity )
+	//		pEntity->GetNode()->WorldRotate( glm::pi<float>() * fDeltaTime * 0.25f, VEC3_UP );
+	//}
 
 	return true;
 }

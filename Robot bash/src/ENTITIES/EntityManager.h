@@ -10,19 +10,22 @@ namespace Entities
 		EntityManager();
 		~EntityManager();
 
-		bool Init();
-		bool Update( float fDeltaTime );
-		void ImGuiDraw();
+				bool				Init();
+				bool				Update( float fDeltaTime );
+				void				ImGuiDraw();
 
-		void Reset();
+				void				Reset();
 
-		void AddEntity( Entity* pEntity );
-		void RemoveEntity( Entity* pEntity );
+				uint32_t			AddEntity( Entity* pEntity );
+				void				RemoveEntity( Entity* pEntity );
+
+				uint32_t			GetEntityID( const Entity* pEntity ) const;
+				Entity*				GetEntityByID( uint32_t id ) const;
 
 	private:
-		static EntityManager*						s_pInstance;
+		static EntityManager*		s_pInstance;
 
-		std::vector<Entity*>						m_oEntities;
+		std::vector<Entity*>		m_oEntities;
 	};
 }
 

@@ -28,10 +28,12 @@ namespace Renderer
 		Light();
 		~Light();
 
-		//virtual bool					Init(Entity* pOwner);
+		virtual bool					Init(Entity* pOwner);
 		virtual bool					Update(float fDeltaTime) override;
 		virtual void					ImGuiDraw();
-		virtual	LightData*				GetGLSLData() const { return m_pData; }
+
+				bool					Render() const;
+				LightData*				GetGLSLData() const { return m_pData; }
 
 		inline void						SetIntensity( float fIntensity ) { m_pData->m_fDiffuseIntensity = fIntensity; }
 		inline float					GetIntensity() const { return m_pData->m_fDiffuseIntensity; }
@@ -42,6 +44,8 @@ namespace Renderer
 	protected:
 		LightType						m_eType;
 		LightData*						m_pData;
+		GLuint							m_uVAO;
+		GLuint							m_uVBOId[2]; // pos & uv
 	};
 
 }

@@ -1,0 +1,8 @@
+<Entity name="Test scene">
+	<Position>20,0,20</Position>
+	<Rotation>0,1,0,180</Rotation>
+	<Mesh>
+		<Model>Data/models/test scene.obj</Model>
+		<DiffuseMap>Data/textures/white.bmp</DiffuseMap>
+	</Mesh>
+</Entity>

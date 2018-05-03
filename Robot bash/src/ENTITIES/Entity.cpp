@@ -26,7 +26,7 @@ namespace Entities
 
 	void Entity::ImGuiDraw()
 	{
-		if( ImGui::TreeNode( m_sName.c_str() ) )
+		if( ImGui::TreeNode( this, m_sName.c_str() ) )
 		{
 
 			for( std::vector<EntityComponent*>::iterator it( m_oComponents.begin() ); it != m_oComponents.end(); ++it )

@@ -13,11 +13,11 @@
     <Filter Include="UTILS">
       <UniqueIdentifier>{5dff3caa-3d40-4ee1-9771-741f924b269c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UTILS\imgui">
-      <UniqueIdentifier>{7768131e-ed5d-4c18-8838-7e9962fe1ba9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="tinyxml2">
       <UniqueIdentifier>{46006359-8d66-4b03-b169-0e86c1d082bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{3719391b-c758-4a89-97f3-14488909e256}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="src\IO\OBJLoader.cpp">
       <Filter>IO</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RENDERER\Batch.cpp">
-      <Filter>RENDERER</Filter>
     </ClCompile>
     <ClCompile Include="src\RENDERER\Camera.cpp">
       <Filter>RENDERER</Filter>
@@ -117,23 +114,23 @@
     <ClCompile Include="src\UTILS\Debug.cpp">
       <Filter>UTILS</Filter>
     </ClCompile>
-    <ClCompile Include="src\UTILS\imgui\imgui.cpp">
-      <Filter>UTILS\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UTILS\imgui\imgui_demo.cpp">
-      <Filter>UTILS\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UTILS\imgui\imgui_draw.cpp">
-      <Filter>UTILS\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\ogl.cpp" />
     <ClCompile Include="src\StdAfx.cpp" />
     <ClCompile Include="src\win32main.cpp" />
-    <ClCompile Include="tinyxml\tinyxml2.cpp">
+    <ClCompile Include="..\externals\tinyxml\tinyxml2.cpp">
       <Filter>tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\externals\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +153,6 @@
       <Filter>RENDERER</Filter>
     </ClInclude>
     <ClInclude Include="src\RENDERER\Mesh.h">
-      <Filter>RENDERER</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RENDERER\Batch.h">
       <Filter>RENDERER</Filter>
     </ClInclude>
     <ClInclude Include="src\IO\BMPLoader.h">
@@ -184,24 +178,6 @@
     </ClInclude>
     <ClInclude Include="src\UTILS\imgui_impl.h">
       <Filter>UTILS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\imgui_internal.h">
-      <Filter>UTILS\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\stb_rect_pack.h">
-      <Filter>UTILS\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\stb_textedit.h">
-      <Filter>UTILS\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\stb_truetype.h">
-      <Filter>UTILS\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\imconfig.h">
-      <Filter>UTILS\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UTILS\imgui\imgui.h">
-      <Filter>UTILS\imgui</Filter>
     </ClInclude>
     <ClInclude Include="src\IO\InputDefinitions.h">
       <Filter>IO</Filter>
@@ -261,8 +237,29 @@
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\ogl.h" />
     <ClInclude Include="src\StdAfx.h" />
-    <ClInclude Include="tinyxml\tinyxml2.h">
+    <ClInclude Include="src\UTILS\Math.h">
+      <Filter>UTILS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\tinyxml\tinyxml2.h">
       <Filter>tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\stb_rect_pack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\stb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\imgui\stb_truetype.h">
+      <Filter>imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

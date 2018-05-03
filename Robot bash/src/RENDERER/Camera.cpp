@@ -8,7 +8,7 @@ namespace Renderer
 {
 
 	Camera::Camera()
-		: m_eCamMoveMode( CAMERA_MOVE_MODE_ORBIT )
+		: m_eCamMoveMode( CAMERA_MOVE_MODE_FREE )
 		, m_fPerspectiveNearPlane( 0.f )
 		, m_fPerspectiveFarPlane( 0.f )
 		, m_fPerspectiveFov( 0.f )
@@ -29,6 +29,9 @@ namespace Renderer
 	{
 		Input::InputMgr::RegisterMouseWheelButton( [this] ( float fZoom ){this->ZoomCallback( fZoom ); } );
 		Input::InputMgr::RegisterMouseMove( [this] ( glm::vec2 vMousePos ){this->MouseMoveCallback( vMousePos ); } );
+
+		m_vOrbitCenter = VEC3_0;
+
 		return true;
 	}
 
@@ -36,20 +39,20 @@ namespace Renderer
 	{
 		if( m_eCamMoveMode == CAMERA_MOVE_MODE_ORBIT )
 		{
-			if( Input::InputMgr::IsKeyDown( Input::KEY_Pad2 ) )
-				Rotate( GetRight(), -fDeltatime * DEBUG::fCameraSpeed );
-			if( Input::InputMgr::IsKeyDown( Input::KEY_Pad8 ) )
-				Rotate( GetRight(), fDeltatime * DEBUG::fCameraSpeed );
-			if( Input::InputMgr::IsKeyDown( Input::KEY_Pad4 ) )
-				Rotate( VEC3_UP, fDeltatime * DEBUG::fCameraSpeed );
-			if( Input::InputMgr::IsKeyDown( Input::KEY_Pad6 ) )
-				Rotate( VEC3_UP, -fDeltatime * DEBUG::fCameraSpeed );
+			glm::vec3 vTranslate = VEC3_0;
+			if( Input::InputMgr::IsKeyDown( Input::KEY_Left ) )
+				vTranslate += GetRight() * fDeltatime;
+			if( Input::InputMgr::IsKeyDown( Input::KEY_Right ) )
+				vTranslate -= GetRight() * fDeltatime;
+			if( Input::InputMgr::IsKeyDown( Input::KEY_Up ) )
+				vTranslate += GetUp() * fDeltatime;
+			if( Input::InputMgr::IsKeyDown( Input::KEY_Down ) )
+				vTranslate -= GetUp() * fDeltatime;
 
-			if( Input::InputMgr::IsKeyDown( Input::KEY_F2 ) )
-			{
-				SetPerspective( m_fPerspectiveFov, m_fPerspectiveNearPlane, m_fPerspectiveFarPlane );
-				LookAt( glm::vec3( 7.8f, 7.8f, 0.f ), glm::vec3( 0, 0, 0 ) );
-			}
+			Translate( vTranslate * DEBUG::fCameraMoveSpeed );
+			m_vOrbitCenter += vTranslate;
+
+			//g_pRenderer->DEBUG_DRAW_CUBE( m_vOrbitCenter );
 		}
 		else
 		{
@@ -58,6 +61,43 @@ namespace Renderer
 
 		//m_mViewMatrix = glm::lookAt( m_vPosition, m_vTarget, glm::vec3( 0, 1, 0 ) );
 		return true;
+	}
+
+	void Camera::ImGuiDraw()
+	{
+		if( ImGui::TreeNode( "Camera" ) )
+		{
+			{
+				bool bDirtyProj = false;
+				bDirtyProj |= ImGui::Checkbox( "Perspective", &m_bPerspective );
+				if( m_bPerspective )
+				{
+					bDirtyProj |= ImGui::DragFloat( "Near plane", &m_fPerspectiveNearPlane, 0.01f, 0.f, 10.f );
+					bDirtyProj |= ImGui::DragFloat( "Far plane", &m_fPerspectiveFarPlane, 0.1f, 0.1f, 1000.f );
+					bDirtyProj |= ImGui::DragFloat( "Fov", &m_fPerspectiveFov, 0.01f, 0.f, 1.f );
+				}
+				else
+				{
+					bDirtyProj |= ImGui::DragFloat( "Near plane", &m_fOrthoNearPlane, 0.01f, 0.f, 10.f );
+					bDirtyProj |= ImGui::DragFloat( "Far plane", &m_fOrthoFarPlane, 0.1f, 0.1f, 1000.f );
+					bDirtyProj |= ImGui::DragFloat( "Width", &m_fOrthoWidth, 0.1f, 0.f, 10000.f );
+					bDirtyProj |= ImGui::DragFloat( "Height", &m_fOrthoHeight, 0.1f, 0.f, 10000.f );
+				}
+
+				if( bDirtyProj )
+					UpdateProjectionMatrix();
+			}
+			{
+				bool bDirtyView = false;
+				bDirtyView |= ImGui::Combo( "Mode", &(int)m_eCamMoveMode, "Orbit\0Free\0\0" );
+
+				if( bDirtyView )
+					UpdateViewMatrix();
+			}
+
+
+			ImGui::TreePop();
+		}
 	}
 
 	void Camera::SetPerspective(float fFOV, float fNearPlane, float fFarPlane)
@@ -77,6 +117,30 @@ namespace Renderer
 		m_fOrthoHeight = fHeight;
 		m_fOrthoNearPlane = fNearPlane;
 		m_fOrthoFarPlane = fFarPlane;
+	}
+
+	void Camera::UpdateProjectionMatrix()
+	{
+		if( m_bPerspective )
+		{
+			m_mProjectionMatrix = glm::perspective( m_fPerspectiveFov, g_pRenderer->GetAspectRatio(), m_fPerspectiveNearPlane, m_fPerspectiveFarPlane );
+		}
+		else
+		{
+			m_mProjectionMatrix = glm::ortho( 0.f, m_fOrthoWidth, 0.f, m_fOrthoHeight, m_fOrthoNearPlane, m_fOrthoFarPlane );
+		}
+	}
+
+	void Camera::UpdateViewMatrix()
+	{
+		if( m_eCamMoveMode == CAMERA_MOVE_MODE_ORBIT )
+		{
+			TODO;
+		}
+		else
+		{
+			//TODO;
+		}
 	}
 
 	void Camera::SetActive()
@@ -113,15 +177,23 @@ namespace Renderer
 
 	void Camera::ZoomCallback( float fZoom )
 	{
-		Translate( GetDirection() * fZoom * DEBUG::fCameraSpeed );
+		Translate( GetDirection() * fZoom * DEBUG::fCameraZoomSpeed );
 	}
 
 	void Camera::MouseMoveCallback( glm::vec2 vDeltaPos )
 	{
 		if( Input::InputMgr::IsMouseLeftDown() && !ImGui::IsWindowHovered( ImGuiHoveredFlags_AnyWindow ) && !ImGui::IsAnyItemActive() )
 		{
-			Rotate( VEC3_UP, vDeltaPos.x );
-			Rotate( GetRight(), vDeltaPos.y );
+			if( m_eCamMoveMode == CAMERA_MOVE_MODE_ORBIT )
+			{
+				glm::vec3 t = GetPosition() - m_vOrbitCenter;
+				m_mViewMatrix = glm::translate( glm::rotate( glm::translate( m_mViewMatrix, -t ), vDeltaPos.x, VEC3_UP ), t );
+			}
+			else
+			{
+				Rotate( VEC3_UP, vDeltaPos.x );
+				Rotate( GetRight(), vDeltaPos.y );
+			}
 		}
 	}
 		

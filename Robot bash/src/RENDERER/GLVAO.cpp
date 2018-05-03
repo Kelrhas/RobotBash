@@ -6,7 +6,7 @@ namespace Renderer
 	/************************************************************************/
 	/* GLVBO                                                               */
 	/************************************************************************/
-	GLVAO::GLVBO::GLVBO()
+	/*GLVAO::GLVBO::GLVBO()
 	{
 		glGenBuffers(1, &m_uID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_uID);
@@ -23,103 +23,137 @@ namespace Renderer
 		glBufferData(GL_ARRAY_BUFFER, iNbItem * iItemSize, pData, GL_STATIC_DRAW);
 
 		return true;
-	}
+	}*/
 
 	/************************************************************************/
 	/* GLVAO                                                               */
 	/************************************************************************/
-	GLVAO::GLVAO(int eBufferFlags /*= VAO_BUFFER_POSITION*/)
+	GLVAO::GLVAO()
 		: m_uID((GLuint)-1)
 		, m_iBufferFlags(0)
-		, m_pPositionVBO(nullptr)
-		, m_pNormalVBO(nullptr)
-		, m_pTexCoordVBO(nullptr)
-		, m_pColorVBO(nullptr)
 	{
-		Assert( eBufferFlags != 0 );
+		for(int i=0; i < VBO_BUFFER_COUNT; ++i)
+			m_pVBOArray[i] = -1;
 
-		m_iBufferFlags = eBufferFlags | VAO_BUFFER_INDEX | VAO_BUFFER_POSITION;
+		m_iBufferFlags = VBO_BUFFER_INDEX | VBO_BUFFER_POSITION;
 
 		// VAO generation
 		glGenVertexArrays(1, &m_uID);
 		glBindVertexArray(m_uID);
+		Assert_GL();
 
 		// VBO for indices
-		glGenBuffers(1, &m_uIndexVBOID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uIndexVBOID);
+		glGenBuffers(1, &m_pVBOArray[VBO_BUFFER_INDEX]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_INDEX] );
+		Assert_GL();
 
-
-		m_pPositionVBO = new GLVBO();
+		glGenBuffers( 1, &m_pVBOArray[VBO_BUFFER_POSITION] );
+		glBindBuffer( GL_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_POSITION] );
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, m_pPositionVBO->GetID());
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+		Assert_GL();
+
+		// unbind to be sure
+		glBindVertexArray( 0 );
 	}
 
 	GLVAO::~GLVAO()
 	{
-		//TODO  free GL memory
-		delete m_pPositionVBO;
-		delete m_pNormalVBO;
-		delete m_pTexCoordVBO;
-		delete m_pColorVBO;
+		for( int i = 0; i < VBO_BUFFER_COUNT; ++i )
+		{
+			if( m_pVBOArray[i] != -1 )
+			{
+				glDeleteBuffers( 1, &m_pVBOArray[i] );
+			}
+		}
+		glDeleteVertexArrays( 1, &m_uID );
+		Assert_GL();
+
+		//delete m_pPositionVBO;
+		//delete m_pNormalVBO;
+		//delete m_pTexCoordVBO;
+		//delete m_pColorVBO;
 	}
 
-	bool GLVAO::SetData(VAOBuffferFlag eFlag, void* pData, int iNbItem)
+	bool GLVAO::SetData( VAOBufffer eVBOBuffer, void* pData, int iNbItem)
 	{
-		switch (eFlag)
+		int iVBOFlag = 1 << eVBOBuffer;
+		glBindVertexArray( m_uID );
+		switch (eVBOBuffer)
 		{
-		case Renderer::VAO_BUFFER_INDEX:
+		case Renderer::VBO_BUFFER_INDEX:
+			glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_INDEX] );
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, iNbItem * sizeof(uint32_t), pData, GL_STATIC_DRAW);
+			Assert_GL();
 			break;
 
-		case Renderer::VAO_BUFFER_POSITION:
-			m_pPositionVBO->SetData(pData, iNbItem, sizeof(float) * 3);
+		case Renderer::VBO_BUFFER_POSITION:
+			glBindBuffer( GL_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_POSITION] );
+			glBufferData( GL_ARRAY_BUFFER, iNbItem * sizeof( float ) * 3, pData, GL_STATIC_DRAW );
+			Assert_GL();
 			break;
-		case Renderer::VAO_BUFFER_NORMAL:
+		case Renderer::VBO_BUFFER_NORMAL:
 		{
-			if ((m_iBufferFlags & VAO_BUFFER_NORMAL) == 0)
+			if ((m_iBufferFlags & iVBOFlag) == 0)
 			{
-				m_iBufferFlags |= VAO_BUFFER_NORMAL;
-				m_pNormalVBO = new GLVBO();
+				m_iBufferFlags |= iVBOFlag;
+				glGenBuffers( 1, &m_pVBOArray[VBO_BUFFER_NORMAL] );
 				glEnableVertexAttribArray(1);
-				glBindBuffer(GL_ARRAY_BUFFER, m_pNormalVBO->GetID());
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, nullptr);
+				Assert_GL();
 			}
 
-			m_pNormalVBO->SetData(pData, iNbItem, sizeof(float) * 3);
+			glBindBuffer( GL_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_NORMAL] );
+			glVertexAttribPointer( 1, 3, GL_FLOAT, GL_TRUE, 0, nullptr );
+			Assert_GL();
+
+			glBufferData( GL_ARRAY_BUFFER, iNbItem * sizeof( float ) * 3, pData, GL_STATIC_DRAW );
+			Assert_GL();
 		}
 		break;
-		case Renderer::VAO_BUFFER_UV:
+		case Renderer::VBO_BUFFER_UV:
 		{
-			if ((m_iBufferFlags & VAO_BUFFER_UV) == 0)
+			if ((m_iBufferFlags & iVBOFlag) == 0)
 			{
-				m_iBufferFlags |= VAO_BUFFER_UV;
-				m_pTexCoordVBO = new GLVBO();
+				m_iBufferFlags |= iVBOFlag;
+				glGenBuffers( 1, &m_pVBOArray[VBO_BUFFER_UV] );
 				glEnableVertexAttribArray(2);
-				glBindBuffer(GL_ARRAY_BUFFER, m_pTexCoordVBO->GetID());
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+				Assert_GL();
 			}
-			m_pTexCoordVBO->SetData(pData, iNbItem, sizeof(float) * 2);
+			glBindBuffer( GL_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_UV] );
+			glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+			Assert_GL();
+
+			glBufferData( GL_ARRAY_BUFFER, iNbItem * sizeof( float ) * 2, pData, GL_STATIC_DRAW );
+			Assert_GL();
 		}
 		break;
 
-		case Renderer::VAO_BUFFER_COLOR:
+		case Renderer::VBO_BUFFER_COLOR:
 		{
-			if ((m_iBufferFlags & VAO_BUFFER_COLOR) == 0)
+			if ((m_iBufferFlags & iVBOFlag) == 0)
 			{
-				m_iBufferFlags |= VAO_BUFFER_COLOR;
-				m_pColorVBO = new GLVBO();
+				m_iBufferFlags |= iVBOFlag;
+				glGenBuffers( 1, &m_pVBOArray[VBO_BUFFER_COLOR] );
 				glEnableVertexAttribArray(3);
-				glBindBuffer(GL_ARRAY_BUFFER, m_pColorVBO->GetID());
-				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+				Assert_GL();
 			}
-			m_pColorVBO->SetData(pData, iNbItem, sizeof(float) * 3);
+			glBindBuffer( GL_ARRAY_BUFFER, m_pVBOArray[VBO_BUFFER_COLOR] );
+			glVertexAttribPointer( 3, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+			Assert_GL();
+
+			glBufferData( GL_ARRAY_BUFFER, iNbItem * sizeof( float ) * 3, pData, GL_STATIC_DRAW );
+			Assert_GL();
 		}
 		break;
 
 		default:
+			TODO;
 			break;
 		}
+		// unbind to be sure
+		glBindBuffer( GL_ARRAY_BUFFER, 0 );
+		glBindVertexArray( 0 );
+
 		return true;
 	}
 

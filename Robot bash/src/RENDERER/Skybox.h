@@ -18,6 +18,8 @@ namespace Renderer
 
 	protected:
 		GLuint				m_iTexture;
+		GLuint				m_uVAO;
+		GLuint				m_uVBO;
 		GLVAO*				m_pVAO;
 
 		SkyboxTechnique		m_oTechnique;

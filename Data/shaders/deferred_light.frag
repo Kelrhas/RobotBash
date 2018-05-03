@@ -55,7 +55,7 @@ float gSpecularPower = 20;
 
 /* TODO use stuffs to remove shadow acne like here
  https://user-images.githubusercontent.com/7088062/36948961-df37690e-1fea-11e8-8999-af8af60403fb.png
-	- normal ofsetting
+	- normal offsetting
 	- normal/slope scaled depth bias
 */
 
@@ -70,7 +70,7 @@ float CalcShadowFactor(vec4 LightSpacePos)
 	bias = clamp(bias, 0.0f, 0.01f);
     float Depth = texture(uShadowmap, LightSpacePos.xy).z;
     if (Depth < (LightSpacePos.z - bias))
-        return 0.2;
+        return 0.03;
     else
         return 1.0;
 }

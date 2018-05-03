@@ -5,3 +5,11 @@
 /.vs
 /Robot bash/Robot bash.vcxproj.user
 /Robot bash/Robot bash.vcxproj.fellow.nvuser
+/log.txt
+/proj.sublime-workspace
+/proj.sublime-project
+/ROADMAP.txt
+*.pdb
+/bin/x64/Debug
+/externals/imgui/backup
+/Robot bash/x64/Debug

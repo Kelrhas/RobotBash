@@ -14,6 +14,8 @@ namespace Renderer
 		Assert_GL();
 		glBindFragDataLocation( m_uID, renderTarget_TexCoord, "TexCoordOut" );
 		Assert_GL();
+		glBindFragDataLocation( m_uID, renderTarget_Picking, "ObjectIdOut" );
+		Assert_GL();
 	}
 
 	void DeferredGeometryTechnique::GatherLocations()
@@ -29,11 +31,14 @@ namespace Renderer
 		m_iDiffuseMapLocation		= glGetUniformLocation( m_uID, "uDiffuseMap" );
 		m_iNormalMapLocation		= glGetUniformLocation( m_uID, "uNormalMap" );
 
+		m_iObjectIdLocation			= glGetUniformLocation( m_uID, "uObjectId" );
+
 		// check we have the needed ones
 		Assert( m_iPositionLocation			!= INVALID_UNIFORM_LOCATION );
 		Assert( m_iModelMatrixLocation		!= INVALID_UNIFORM_LOCATION );
 		Assert( m_iMVPLocation				!= INVALID_UNIFORM_LOCATION );
 		Assert( m_iNormalMatrixLocation		!= INVALID_UNIFORM_LOCATION );
+		//Assert( m_iObjectIdLocation			!= INVALID_UNIFORM_LOCATION );
 	}
 
 	void DeferredGeometryTechnique::SetModelMatrix( const glm::mat4& mMV )
@@ -65,6 +70,15 @@ namespace Renderer
 		if( m_iDiffuseMapLocation != INVALID_UNIFORM_LOCATION )
 		{
 			glUniform1i( m_iDiffuseMapLocation, iTexIndex );
+			Assert_GL();
+		}
+	}
+
+	void DeferredGeometryTechnique::SetObjectId( uint32_t uId )
+	{
+		if( m_iObjectIdLocation != INVALID_UNIFORM_LOCATION )
+		{
+			glUniform1ui( m_iObjectIdLocation, uId );
 			Assert_GL();
 		}
 	}

@@ -4,6 +4,7 @@
 #include "Node.h"
 
 #include "ENTITIES/Entity.h"
+#include "ENTITIES/EntityManager.h"
 
 #include "RENDERER/GLVAO.h"
 #include "RENDERER/GLRenderer.h"
@@ -71,12 +72,12 @@ namespace Renderer
 		modelLoader.OptimizeToVAO(vOutPositions, vOutNormals, vOutUVs, vOutIndices);
 		
 		// TODO get location from technique instead of Renderer::VAO_BUFFER_INDEX
-		m_pVAO->SetData(Renderer::VAO_BUFFER_INDEX, &vOutIndices[0], (int)vOutIndices.size());
-		m_pVAO->SetData(Renderer::VAO_BUFFER_POSITION, &vOutPositions[0], (int)vOutPositions.size());
+		m_pVAO->SetData(Renderer::VBO_BUFFER_INDEX, &vOutIndices[0], (int)vOutIndices.size());
+		m_pVAO->SetData(Renderer::VBO_BUFFER_POSITION, &vOutPositions[0], (int)vOutPositions.size());
 		if(!vOutNormals.empty())
-			m_pVAO->SetData(Renderer::VAO_BUFFER_NORMAL, &vOutNormals[0], (int)vOutNormals.size());
+			m_pVAO->SetData(Renderer::VBO_BUFFER_NORMAL, &vOutNormals[0], (int)vOutNormals.size());
 		if(!vOutUVs.empty())
-			m_pVAO->SetData(Renderer::VAO_BUFFER_UV, &vOutUVs[0], (int)vOutUVs.size());
+			m_pVAO->SetData(Renderer::VBO_BUFFER_UV, &vOutUVs[0], (int)vOutUVs.size());
 
 		m_uNbVertex = vOutIndices.size();
 
@@ -87,11 +88,15 @@ namespace Renderer
 	{
 		RenderBatch batch;
 		batch.uVAO = m_pVAO->GetID();
-		batch.pWorldMatrix = GetOwner()->GetNode()->GetWorldMatrixPtr();
+		batch.mWorldMatrix = GetOwner()->GetNode()->GetWorldMatrix();
 		batch.uNbVertex = m_uNbVertex;
 		if (m_bForwardRendering)
 			batch.uFlags |= RENDER_FORWARD;
 		batch.xDiffuseMap = m_xDiffuseMap;
+		batch.uObjectId = g_pEntityMgr->GetEntityID( m_pOwner )+1; // 0 will be default for nothing
+#ifdef _DEBUG
+		batch.pVAO = m_pVAO;
+#endif
 		g_pRenderer->AddBatch(batch);
 
 		return true;

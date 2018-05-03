@@ -24,6 +24,7 @@ PFNGLGETPROGRAMIVPROC glGetProgramiv = nullptr;
 PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog = nullptr;
 PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation = nullptr;
 PFNGLUNIFORM1IPROC glUniform1i = nullptr;
+PFNGLUNIFORM1UIPROC glUniform1ui = nullptr;
 PFNGLUNIFORM1IVPROC glUniform1iv = nullptr;
 PFNGLUNIFORM2IVPROC glUniform2iv = nullptr;
 PFNGLUNIFORM3IVPROC glUniform3iv = nullptr;

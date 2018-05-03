@@ -32,11 +32,15 @@ namespace Renderer
 		for( unsigned int i = 0; i < renderTarget_Count; i++ )
 		{
 			glBindTexture( GL_TEXTURE_2D, m_aTexturesID[i] );
-			glTexImage2D( GL_TEXTURE_2D, 0, aRenderTargetInfos[i].uInternalFormat, uWindowWidth, uWindowHeight, 0, aRenderTargetInfos[i].uFormat, GL_FLOAT, nullptr );
+			glTexImage2D( GL_TEXTURE_2D, 0, aRenderTargetInfos[i].uInternalFormat, uWindowWidth, uWindowHeight, 0, aRenderTargetInfos[i].uFormat, aRenderTargetInfos[i].uType, nullptr );
+			Assert_GL();
 			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+			Assert_GL();
 			glFramebufferTexture2D( GL_FRAMEBUFFER, aRenderTargetInfos[i].eAttachment, GL_TEXTURE_2D, m_aTexturesID[i], 0 );
+			Assert_GL();
 			glObjectLabel( GL_TEXTURE, m_aTexturesID[i], -1, aRenderTargetInfos[i].sName );
+			Assert_GL();
 		}
 
 		// depth
@@ -46,6 +50,7 @@ namespace Renderer
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 		glFramebufferTexture2D( GL_FRAMEBUFFER, aRenderTargetInfos[renderTarget_Depth].eAttachment, GL_TEXTURE_2D, m_uDepthTexture, 0 );
 		glObjectLabel( GL_TEXTURE, m_uDepthTexture, -1, aRenderTargetInfos[renderTarget_Depth].sName );
+		Assert_GL();
 		
 		GLenum eStatus = glCheckFramebufferStatus( GL_FRAMEBUFFER );
 
@@ -73,11 +78,13 @@ namespace Renderer
 		glBindBuffer( GL_ARRAY_BUFFER, m_uVBOId[0] );
 		glVertexAttribPointer( (GLuint) 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 		glBufferData( GL_ARRAY_BUFFER, 6 * 3 * sizeof( float ), verts, GL_STATIC_DRAW );
+		Assert_GL();
 
 		glEnableVertexAttribArray( 1 ); // Texture coordinates
 		glBindBuffer( GL_ARRAY_BUFFER, m_uVBOId[1] );
 		glVertexAttribPointer( (GLuint) 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 		glBufferData( GL_ARRAY_BUFFER, 6 * 2 * sizeof( float ), uvs, GL_STATIC_DRAW );
+		Assert_GL();
 
 		glBindVertexArray( 0 );
 
@@ -108,6 +115,7 @@ namespace Renderer
 		BindTexture( renderTarget_Albedo, renderTarget_Albedo );
 		BindTexture( renderTarget_Normal, renderTarget_Normal );
 		BindTexture( renderTarget_TexCoord, renderTarget_TexCoord );
+		BindTexture( renderTarget_Picking, renderTarget_Picking );
 	}
 
 	void GBuffer::BindTexture( RenderTarget eRenderTarget, uint8_t id )
@@ -129,9 +137,9 @@ namespace Renderer
 	void GBuffer::DrawQuad()
 	{
 		glBindVertexArray( m_uVAO );
-
+		
 		glDrawArrays( GL_TRIANGLES, 0, 6 );
-
+		
 		glBindVertexArray( 0 );
 	}
 
